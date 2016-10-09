@@ -1,11 +1,16 @@
-board([[s,s,s],
-		[s,s,s],
-		[s,s,s]]).
+board([[s,s,s,s],
+		[s,s,s,s],
+		[s,s,s,s],
+		[s,s,s,s],
+		[s,s,s,s],
+		[s,s,s,s],
+		[s,s,s,s],
+		[s,s,s,s]]).
 
 display_board([L1|Ls],X,Y):- 
 	display_line(L1),
 	nl,
-	write('-|-|-'),
+	write('-|-|-|-'),
 	nl,
 	display_board(Ls,X,Y).
 
