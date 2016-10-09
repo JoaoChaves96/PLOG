@@ -1,11 +1,11 @@
-board([[s,s,s,s],
+board([ [q,q,q,s],
+		[d,d,d,s],
+		[p,p,p,s],
 		[s,s,s,s],
 		[s,s,s,s],
-		[s,s,s,s],
-		[s,s,s,s],
-		[s,s,s,s],
-		[s,s,s,s],
-		[s,s,s,s]]).
+		[s,p,p,p],
+		[s,d,d,d],
+		[s,q,q,q]]).
 
 display_board([L1|Ls],X,Y):- 
 	display_line(L1),
@@ -30,8 +30,9 @@ display_line([E|Es]):-
 	display_line(Es).
 	
 translate(s,' ').
-translate(x,'X').
-translate(o, 'O').
+translate(p,'P').
+translate(d, 'D').
+translate(q, 'Q').
 
 display_line([]).
 
