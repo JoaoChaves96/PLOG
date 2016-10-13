@@ -1,16 +1,23 @@
-board([ [q,q,q,s],
-		[d,d,d,s],
-		[p,p,p,s],
-		[s,s,s,s],
-		[s,s,s,s],
-		[s,p,p,p],
-		[s,d,d,d],
-		[s,q,q,q]]).
+board([	[la,q,q,q,s],
+		[lb,d,d,d,s],
+		[lc,p,p,p,s],
+		[ld,s,s,s,s],
+		[le,s,s,s,s],
+		[lf,s,p,p,p],
+		[lg,s,d,d,d],
+		[lh,s,q,q,q]]).
 
+display_total_board([L1|Ls],X,Y):-
+	write('   1 2 3 4'),
+	nl,
+	write('   - - - -'),
+	nl,
+	display_board([L1|Ls],X,Y).
+	
 display_board([L1|Ls],X,Y):- 
 	display_line(L1),
 	nl,
-	write('-|-|-|-'),
+	write('   - - - -'),
 	nl,
 	display_board(Ls,X,Y).
 
@@ -33,6 +40,14 @@ translate(s,' ').
 translate(p,'P').
 translate(d, 'D').
 translate(q, 'Q').
+translate(la,'a ').
+translate(lb,'b ').
+translate(lc,'c ').
+translate(ld,'d ').
+translate(le,'e ').
+translate(lf,'f ').
+translate(lg,'g ').
+translate(lh,'h ').
 
 display_line([]).
 
@@ -47,5 +62,5 @@ play_game(B,X,Y):-
 	read_player(Y),
 	nl,
 	nl,
-	display_board(B,X,Y).
+	display_total_board(B,X,Y).
 	
