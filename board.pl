@@ -1,27 +1,38 @@
-board([	[la,q,q,q,s],
-		[lb,d,d,d,s],
-		[lc,p,p,p,s],
-		[ld,s,s,s,s],
-		[le,s,s,s,s],
-		[lf,s,p,p,p],
-		[lg,s,d,d,d],
-		[lh,s,q,q,q]]).
+board([ [q,q,d,s],
+		[q,d,p,s],
+		[d,p,p,s],
+		[s,s,s,s],
+		[s,s,s,s],
+		[s,p,p,d],
+		[s,p,d,q],
+		[s,d,q,q]]).
 
-display_total_board([L1|Ls],X,Y):-
-	write('   1 2 3 4'),
+
+display_board_letter(B):-
+	write('   a b c d'),
 	nl,
 	write('   - - - -'),
-	nl,
-	display_board([L1|Ls],X,Y).
-	
-display_board([L1|Ls],X,Y):- 
+	nl.
+
+/**
+display_board_letter(4,8):-
+write(' a b c d'),
+nl.
+*/
+
+
+
+display_board([L1|Ls],X,Y,N):-
+	display_line_number(N),
+	N1 is N+1,
+	write('|'),
 	display_line(L1),
 	nl,
 	write('   - - - -'),
 	nl,
-	display_board(Ls,X,Y).
+	display_board(Ls,X,Y,N1).
 
-display_board([],X,Y):-
+display_board([],X,Y,_):-
 	nl,
 	write('player1: '),
 	write(X),
@@ -30,26 +41,23 @@ display_board([],X,Y):-
 	write(Y),
 	nl, nl.
 
+display_line_number(N):-
+	write(N),
+	write(' ').
+
 display_line([E|Es]):-
 	translate(E,V),
 	write(V),
 	write('|'),
 	display_line(Es).
 	
-translate(s,' ').
-translate(p,'P').
-translate(d, 'D').
-translate(q, 'Q').
-translate(la,'a ').
-translate(lb,'b ').
-translate(lc,'c ').
-translate(ld,'d ').
-translate(le,'e ').
-translate(lf,'f ').
-translate(lg,'g ').
-translate(lh,'h ').
-
 display_line([]).
+
+	
+translate(s,' ').
+translate(p,'*').
+translate(d, 'x').
+translate(q, 'X').
 
 read_player(X):-
 	write('player name: '),
@@ -62,5 +70,5 @@ play_game(B,X,Y):-
 	read_player(Y),
 	nl,
 	nl,
-	display_total_board(B,X,Y).
-	
+	display_board_letter(B),
+	display_board(B,X,Y,1).
