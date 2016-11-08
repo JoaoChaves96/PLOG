@@ -1,3 +1,5 @@
+:-consult(auxiliar).
+
 board([ [q,q,d,s],
 		[q,d,p,s],
 		[d,p,p,s],
@@ -15,7 +17,7 @@ display_board_letter(B):-
 	nl.
 
 
-half_board(N):- ( N=4 -> write('  =================');write('   ---------------') ).
+%half_board(N):- ( N=4 -> write('  =================');write('   ---------------') ).
 
 
 display_board([L1|Ls],X,Y,N):-
@@ -24,7 +26,7 @@ display_board([L1|Ls],X,Y,N):-
 	write('|'),
 	display_line(L1),
 	nl,
-	half_board(N),
+	( N=4 -> write('  =================');write('   ---------------') ),
 	nl,
 	display_board(Ls,X,Y,N1).
 
@@ -61,12 +63,30 @@ read_player(X):-
 	read(X),
 	nl.
 
+ask_play(ColunaToMove, LinhaToMove, ColunaDestino, LinhaDestino, X, L1) :-
+	write('Digite a coluna (letra) da peca a mover'), nl,
+	getChar(ColunaToMove),
+	letra(ColunaToMove, X, L1),
+	write('Digite a linha (numero) da peca a mover'), nl,
+	getDigit(LinhaToMove),
+	numero(LinhaToMove, X, L1),
+ 	write('Digite a coluna (letra) do destino'), nl,
+	getChar(ColunaDestino),
+	letra(ColunaDestino, X, L1),
+ 	write('Digite a linha (numero) do destino'), nl,
+	getDigit(LinhaDestino),
+	numero(LinhaDestino, X, L1).
+
+
+
+
 play_game(B,X,Y):-
 	board(B),
-	read_player(X),
-	read_player(Y),
+	%read_player(X),
+	%read_player(Y),
 	nl,
 	nl,
 	display_board_letter(B),
-	display_board(B,X,Y,1).
-
+	display_board(B,X,Y,1),
+	getElement(B,1,1,K),	
+	ask_play(S,I,O,R,X,L1).
