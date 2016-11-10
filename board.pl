@@ -88,5 +88,9 @@ play_game(B,X,Y):-
 	nl,
 	display_board_letter(B),
 	display_board(B,X,Y,1),
-	getElement(B,1,1,K),	
-	ask_play(S,I,O,R,X,L1).
+	replace(B,0,0,'s',R),
+	display_board(R,X,Y,1),
+	drone_can_move(B,1,1,1,4).
+	%pawn_can_move(B,2,2,1,1).
+	%getelem(B,1,1,Elem),
+	%ask_play(C,L,NC,NL,X,L1).
