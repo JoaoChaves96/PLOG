@@ -1,11 +1,14 @@
 :- include('board.pl').
+:- include('auxiliar.pl').
+:- consult('board.pl').
+:-consult('auxiliar.pl').
 
 %%%%%%%%%%%ClearScreen%%%%%%%%%%%%%%%%%%
 
 clearScreen :-
 		printBlank(65).
 
-printBlank(A) :- 
+printBlank(A) :-
 			A > 0,
 			nl,
 			A1 is A - 1,
@@ -26,7 +29,7 @@ mainMenu :-
 		).
 
 printMainMenu :-
-			
+
 			write('##############################\n'),  %30 spaces
 			write('#                            #\n'),
 			write('#        Martian Chess       #\n'),
@@ -55,7 +58,7 @@ instructionsMenu :-
 			mainMenu.
 
 
-printInstructionsMenu :- 
+printInstructionsMenu :-
 			write('######################################################\n'),
 			write('#                                                    #\n'),
 			write('#                                                    #\n'),
@@ -81,6 +84,12 @@ printInstructionsMenu :-
 			write('######################################################\n'),
 			printBlank(10).
 
+newBoard(B, Nl):- B = Nl, write('a').
 
-
-
+play(B, X, Y):-
+	play_game(B, X, Y),
+	repeat,
+		ask_play(B, L, C, Nl, Nc, Nb),
+		display_full_board(Nb, X, Y, 1),
+		(end_game_p1(Nb, 1) -> write('acabou'), !;
+			write('nao acabou'), newBoard(B, Nl), fail).
