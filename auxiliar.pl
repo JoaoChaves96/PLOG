@@ -1,4 +1,5 @@
 :- use_module(library(lists)).
+:- use_module(library(random)).
 
 % Return element by index (Row,col)
 
@@ -11,19 +12,23 @@
 % Checks the path of the movement
 
 	check_path_col(B, Nl, C, Nc, Inc):-
-		(C = Nc -> write('path_col valido\n'), true;
+    Fc is Nc - Inc,
+		(C = Fc -> write('path_col valido\n'), true;
 		Next is C + Inc,
 		getelem(B, Nl, Next, Elem),
 		(Elem \= 's' -> write('path col invalido\n'), false; check_path_col(B, Nl, Next, Nc, Inc))).
 
 	check_path_line(B, L, Nl, Nc, Inc):-
-		(L = Nl -> write('path_line valido\n'), true;
+    Fl is Nl - Inc,
+		(L = Fl -> write('path_line valido\n'), true;
 		Next is L + Inc,
 		getelem(B, Next, Nc, Elem),
 		(Elem \= 's' -> write('path line invalido\n'), false; check_path_line(B, Next, Nl, Nc, Inc))).
 
 	check_path_line_col(B, L, C, Nl, Nc, IncL, IncC):-
-		(L = Nl, C = Nc -> write('path_line_col valido\n'), true;
+    Fl is Nl - IncL,
+    Fc is Nc - IncC,
+		(L = Fl, C = Fc -> write('path_line_col valido\n'), true;
 		NextL is L + IncL,
 		NextC is C + IncC,
 		getelem(B, NextL, NextC, Elem),
@@ -77,19 +82,32 @@ replace( L , X , Y , Z , R ) :-
   					%
 
 
-pawn_can_move(B,L,C,Nl,Nc):-
+check_jogada(B, L, C, Nl, Nc, J):-
+  getelem(B, Nl, Nc, Elem),
+  (
+    is_par(J) -> check_jogada2(B, L, C, Nl, Nc, Elem); check_jogada1(B, L, C, Nl, Nc, Elem)
+  ).
+
+
+check_jogada1(B, L, C, Nl, Nc, Elem):-
+  (Elem \= 's' , Nl > 4 -> false ; true).
+
+check_jogada2(B, L, C, Nl, Nc, Elem):-
+  (Elem \= 's' , Nl < 5 -> false ; true).
+
+
+pawn_can_move(B,L,C,Nl,Nc, J):-
+  (check_jogada(B, L, C, Nl, Nc, J) ->
 	DL is abs(Nl-L),
 	DC is abs(Nc-C),
-	(DC=1,DL=1 -> nl ; (write('Jogada invalida\n') ,false)),
-	getelem(B,Nl,Nc,Elem),
-	(Elem='s' -> write('Jogada valida\n'),nl,nl,true; write('Jogada invalida\n'),false ).
+	(DC=1,DL=1 -> nl ; (write('Jogada invalida\n') ,false));false).
 
-drone_can_move(B,L,C,Nl,Nc):-
+drone_can_move(B,L,C,Nl,Nc, J):-
+  (check_jogada(B, L, C, Nl, Nc, J) ->
 	AbsDL is abs(Nl-L),
 	AbsDC is abs(Nc-C),
 	DL is Nl-L,
 	DC is Nc-C,
-
 	(AbsDC=0,AbsDL=0 ->  (write('Jogada invalida\n') ,false );
 	((AbsDL=1 ;AbsDL=2),AbsDC=0 );((AbsDC=1;AbsDC=2),AbsDL=0) -> nl;  write('Jogada invalida\n'),false),
 
@@ -100,9 +118,10 @@ drone_can_move(B,L,C,Nl,Nc):-
 		DC = 0, DL < 0 -> check_path_line(B, L, Nl, Nc, -1);
 		DC = 0, DL > 0 -> check_path_line(B, L, Nl, Nc, 1);
 		nl
-	).
+	); false).
 
-queen_can_move(B, L, C, Nl, Nc):-
+queen_can_move(B, L, C, Nl, Nc, J):-
+  (check_jogada(B, L, C, Nl, Nc, J) ->
 	DL is Nl-L,
 	DC is Nc-C,
 	(
@@ -113,8 +132,6 @@ queen_can_move(B, L, C, Nl, Nc):-
 
 		DC = 0, DL < 0 -> check_path_line(B, L, Nl, Nc, -1);
 		DC = 0, DL > 0 -> check_path_line(B, L, Nl, Nc, 1);
-		nl
-	),
 
 	AbsL is abs(DL),
 	AbsC is abs(DC),
@@ -127,38 +144,69 @@ queen_can_move(B, L, C, Nl, Nc):-
 		DL > 0, DC < 0 -> check_path_line_col(B, L, C, Nl, Nc, 1, -1);
 		DL > 0, DC > 0 -> check_path_line_col(B, L, C, Nl, Nc, 1, 1);
 		nl
-		).
+		)
+  );false).
 
 
 end_game_p1(B, C):-
-	(
 		C = 5 -> true;
 		nth1(C, B, Elem),
 		(
-			Elem = ['s', 's', 's', 's'] -> false
-		),
+			Elem \= ['s', 's', 's', 's'] -> false;
 
-	C1 is C + 1,
-	end_game_p1(B, C1)).
+    	C1 is C + 1,
+    	end_game_p1(B, C1)).
 
 end_game_p2(B, C):-
-	(
 		C = 9 -> true;
 		nth1(C, B, Elem),
 		(
-			Elem = ['s', 's', 's', 's'] -> false
-		),
+			Elem \= ['s', 's', 's', 's'] -> false;
 
-	C1 is C + 1,
-	end_game_p2(B, C1)).
-
+    	C1 is C + 1,
+    	end_game_p2(B, C1)).
 
 
-move_piece(B,L,C,Nl,Nc,Nr):-
+update_score(Elem2, Os1, Ns1, Os2, Ns2, J):-
+nl, write('elemento '),write(Elem2), nl,
+  (
+    Elem2 = 'p' -> P is 1;
+    Elem2 = 'd' -> P is 2;
+    Elem2 = 'q' -> P is 3;
+    P is 0
+  ),
+  nl,
+  write('valor p '),
+  write(P),
+  nl,
+  (is_par(J) -> Ns2 is (Os2 + P); Ns1 is (Os1 + P)).
+
+/**  move_piece(B,L,C,Nl,Nc,J, Nb):-
+  	getelem(B,L,C,Elem),
+  	write(Elem),
+  	(
+  		Elem = 'p' -> F is 0;
+  		Elem = 'd' -> F is 1;
+  		Elem = 'q' -> F is 2
+  	),
+
+  		Li is L - 1,
+  		Ci is C - 1,
+
+  		NLi is Nl - 1,
+  		NCi is Nc - 1,
+
+  	(
+  		F = 0, pawn_can_move(B, L, C, Nl, Nc, J) -> replace(B, Li, Ci, 's', N), replace(N,NLi, NCi,Elem, Nb); false;
+  		F = 1, drone_can_move(B, L, C, Nl, Nc, J) -> replace(B, Li, Ci, 's', N), replace(N,NLi, NCi,Elem, Nb); false;
+  		F = 2, queen_can_move(B, L, C, Nl, Nc, J) -> replace(B, Li, Ci, 's', N), replace(N,NLi, NCi,Elem, Nb); false
+  	).*/
+
+move_piece(B,L,C,Nl,Nc,Nr, J, Os1, Ns1, Os2, Ns2):-
 	getelem(B,L,C,Elem),
 	write(Elem),
 	(
-		Elem = 's' -> write('peça invalida\n'), ask_play(B,L1, C1, Nl1, Nc1,Nr);
+		Elem = 's' -> write('peça invalida\n'), ask_play(B,L1, C1, Nl1, Nc1,Nr, J, Os1, Ns1, Os2, Ns2);
 		Elem = 'p' -> F is 0;
 		Elem = 'd' -> F is 1;
 		Elem = 'q' -> F is 2
@@ -171,7 +219,29 @@ move_piece(B,L,C,Nl,Nc,Nr):-
 		NCi is Nc - 1,
 
 	(
-		F = 0, pawn_can_move(B, L, C, Nl, Nc) -> replace(B, Li, Ci, 's', N), replace(N,NLi, NCi,Elem, Nr);
-		F = 1, drone_can_move(B, L, C, Nl, Nc) -> replace(B, Li, Ci, 's', N), replace(N,NLi, NCi,Elem, Nr);
-		F = 2, queen_can_move(B, L, C, Nl, Nc) -> replace(B, Li, Ci, 's', N), replace(N,NLi, NCi,Elem, Nr)
+		F = 0 -> (pawn_can_move(B, L, C, Nl, Nc, J) -> replace(B, Li, Ci, 's', N), getelem(B, Nl, Nc, Elem2), update_score(Elem2, Os1, Ns1, Os2, Ns2, J), replace(N,NLi, NCi,Elem, Nr); ask_play(B,Ln,Cn,Nln,Ncn,Nr, J, Os1, Ns1, Os2, Ns2));
+		F = 1 -> (drone_can_move(B, L, C, Nl, Nc, J) -> replace(B, Li, Ci, 's', N), getelem(B, Nl, Nc, Elem2), update_score(Elem2, Os1, Ns1, Os2, Ns2, J), replace(N,NLi, NCi,Elem, Nr); ask_play(B,Ln,Cn,Nln,Ncn,Nr, J, Os1, Ns1, Os2, Ns2));
+		F = 2 -> (queen_can_move(B, L, C, Nl, Nc, J) -> replace(B, Li, Ci, 's', N), getelem(B, Nl, Nc, Elem2), update_score(Elem2, Os1, Ns1, Os2, Ns2, J), replace(N,NLi, NCi,Elem, Nr);ask_play(B,Ln,Cn,Nln,Ncn,Nr, J, Os1, Ns1, Os2, Ns2))
+	).
+
+move_piece_PC(B,L,C,Nl,Nc,Nr, J, Os1, Ns1, Os2, Ns2):-
+	getelem(B,L,C,Elem),
+	write(Elem),
+	(
+		Elem = 's' -> write('peça invalida\n'), ask_play(B,L1, C1, Nl1, Nc1,Nr, J, Os1, Ns1, Os2, Ns2);
+		Elem = 'p' -> F is 0;
+		Elem = 'd' -> F is 1;
+		Elem = 'q' -> F is 2
+	),
+
+		Li is L - 1,
+		Ci is C - 1,
+
+		NLi is Nl - 1,
+		NCi is Nc - 1,
+
+	(
+		F = 0 -> (pawn_can_move(B, L, C, Nl, Nc, J) -> replace(B, Li, Ci, 's', N), getelem(B, Nl, Nc, Elem2), update_score(Elem2, Os1, Ns1, Os2, Ns2, J), replace(N,NLi, NCi,Elem, Nr); false);
+		F = 1 -> (drone_can_move(B, L, C, Nl, Nc, J) -> replace(B, Li, Ci, 's', N), getelem(B, Nl, Nc, Elem2), update_score(Elem2, Os1, Ns1, Os2, Ns2, J), replace(N,NLi, NCi,Elem, Nr); false);
+		F = 2 -> (queen_can_move(B, L, C, Nl, Nc, J) -> replace(B, Li, Ci, 's', N), getelem(B, Nl, Nc, Elem2), update_score(Elem2, Os1, Ns1, Os2, Ns2, J), replace(N,NLi, NCi,Elem, Nr); false)
 	).

@@ -8,14 +8,25 @@ board([ [q,q,d,s],
 		[s,p,d,q],
 		[s,d,q,q]]).
 
-		board1([ [s,s,s,s],
+		board1([
+				[s,s,s,s],
+				[p,s,s,s],
+				[s,s,s,p],
+				[s,s,d,s],
 				[s,s,s,s],
 				[s,s,s,s],
-				[s,s,s,s],
-				[s,s,s,s],
-				[s,p,p,d],
-				[s,p,d,q],
-				[s,d,q,q]]).
+				[p,s,q,s],
+				[s,s,s,s]]).
+
+				board2([
+						[q,q,q,q],
+						[q,q,q,q],
+						[q,q,q,q],
+						[q,q,q,q],
+						[s,s,s,s],
+						[s,s,s,s],
+						[p,s,q,s],
+						[s,s,s,s]]).
 
 
 display_board_letter(B):-
@@ -72,7 +83,17 @@ read_player(X):-
 	read(X),
 	nl.
 
-ask_play(B, LinhaToMove, ColunaToMove, LinhaDestino, ColunaDestino, Nb) :-
+is_par(J):-
+	X is J mod 2,
+	X = 0.
+
+move(L, C, J, S1, Ns1, S2, Ns2):-
+	(is_par(J) ->  L < 5, Ns1 is S1, write(Ns1); L > 4, Ns2 is S2, write(Ns2)).
+
+ask_play(B, LinhaToMove, ColunaToMove, LinhaDestino, ColunaDestino, Nb, J, S1, Ns1, S2, Ns2) :-
+	write('joagada = '),
+	nl,
+	write(J),nl,
 	write('Digite a linha (numero) da peca a mover'), nl,
 	getDigit(LinhaToMove),
 	%numero(LinhaToMove, X, L1),
@@ -87,7 +108,7 @@ ask_play(B, LinhaToMove, ColunaToMove, LinhaDestino, ColunaDestino, Nb) :-
 	getChar(ColunaDestino),
 	%letra(ColunaDestino, X, L1),
 	letterToNumber(ColunaDestino,Yf),
-	move_piece(B, LinhaToMove, Yi, LinhaDestino, Yf, Nb).
+	(move(LinhaToMove, Yi, J, S1, Ns1, S2, Ns2) -> move_piece(B, LinhaToMove, Yi, LinhaDestino, Yf, Nb, J, S1, Ns1, S2, Ns2); ask_play(B, L, C, Nl, Nc, Nb, J, S1, Ns1, S2, Ns2)).
 
 display_full_board(B, X, Y, 1):-
 display_board_letter(B),
@@ -95,17 +116,13 @@ display_board(B,X,Y,1).
 
 
 play_game(B,X,Y):-
-	board1(B),
+	board2(B),
 	%read_player(X),
 	%read_player(Y),
 	nl,
 	nl,
 	display_full_board(B, X, Y, 1).
 
-	%display_full_board(B,X,Y,1),
-	repeat,
-	ask_play(B, L, C, Nl, Nc, Nb),
-	display_full_board(Nb, X, Y, 1).
 	%display_full_board(Nb, X, Y, 1).
 	%queen_can_move(B,1,4,4,1).
 	%drone_can_move(B,1,4,3,4).
