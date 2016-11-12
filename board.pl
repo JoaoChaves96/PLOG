@@ -50,14 +50,7 @@ display_board([L1|Ls],X,Y,N):-
 	nl,
 	display_board(Ls,X,Y,N1).
 
-display_board([],X,Y,_):-
-	nl,
-	write('player1: '),
-	write(X),
-	nl,
-	write('player2: '),
-	write(Y),
-	nl, nl.
+display_board([],X,Y,_).
 
 display_line_number(N):-
 	write(N),
