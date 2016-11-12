@@ -105,7 +105,6 @@ ask_play(B, LinhaToMove, ColunaToMove, LinhaDestino, ColunaDestino, Nb, J, S1, N
 	getChar(ColunaDestino),
 	%letra(ColunaDestino, X, L1),
 	letterToNumber(ColunaDestino,Yf),
-	write('\nchegou ao move piece\n'),
 	(move(LinhaToMove, Yi, J, S1, Ns1, S2, Ns2), move_piece(B, LinhaToMove, Yi, LinhaDestino, Yf, Nb, J, S1, Ns1, S2, Ns2) -> true; ask_play(B, L, C, Nl, Nc, Nb, J, S1, Ns1, S2, Ns2)).
 
 display_full_board(B, X, Y, 1):-

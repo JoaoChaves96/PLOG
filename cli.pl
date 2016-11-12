@@ -95,6 +95,7 @@ make_play_vs_PC(B, X, Y, S1, S2, Fs1, Fs2, J):-
 	(
 		is_par(J) -> get_rand_piece(B, L, C, Nl, Nc, Nb, J, S1, Ns1, S2, Ns2); ask_play(B, L, C, Nl, Nc, Nb, J, S1, Ns1, S2, Ns2)
 	),
+	clearScreen,
 	display_full_board(Nb, X, Y, 1),
 	((end_game_p2(Nb, 5); end_game_p1(Nb, 1)) ->nl,
 		write('player1 score: '),write(Ns1),
@@ -111,6 +112,7 @@ make_play(B, X, Y, S1, S2, Fs1, Fs2, J):-
 	write('player2 score: '),write(S2),
 	nl,
 	ask_play(B, L, C, Nl, Nc, Nb, J, S1, Ns1, S2, Ns2),
+	clearScreen,
 	display_full_board(Nb, X, Y, 1),
 	nl,
 	write(Fs1),

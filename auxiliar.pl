@@ -4,7 +4,6 @@
 % Return element by index (Row,col)
 
   getelem(B,L,C,Elem):-
-
   nth1(L,B,MatrixRow),
   nth1(C, MatrixRow, Elem).
   %write(Elem).
@@ -82,36 +81,43 @@ replace( L , X , Y , Z , R ) :-
   					%
 
 
-check_jogada(B, L, C, Nl, Nc, J, Elem2):-
+check_jogada(B, L, C, Nl, Nc, J, Elem2, NewElem):-
   getelem(B, Nl, Nc, Elem2),
   (
-    is_par(J) -> check_jogada2(B, L, C, Nl, Nc, Elem2); check_jogada1(B, L, C, Nl, Nc, Elem2)
+    is_par(J) -> check_jogada2(B, J, L, C, Nl, Nc, Elem2, NewElem); check_jogada1(B, J, L, C, Nl, Nc, Elem2, NewElem)
   ).
 
 
-check_jogada1(B, L, C, Nl, Nc, Elem):-
+check_jogada1(B, J, L, C, Nl, Nc, Elem, NewElem):-
   getelem(B, L, C, E),
-  ((Elem = E; Elem = 's') -> true; false).
+  (Elem = E, E = 'p', board_has_drones(B, J) -> NewElem = 'd', true;
+  Elem = E, E = 'd', board_has_queens(B, J) -> NewElem = 'q', true;
+  Elem = 's' -> NewElem = Elem, true;
+  Elem \= 's', Nl < 5 -> NewElem = Elem, true;
+  write('erro'), false).
 
-check_jogada2(B, L, C, Nl, Nc, Elem):-
+check_jogada2(B, J, L, C, Nl, Nc, Elem, NewElem):-
   getelem(B, L, C, E),
-  ((Elem = E; Elem = 's') -> true; false).
-
+  (Elem = E, E = 'p', board_has_drones(B, J) -> NewElem = 'd', true;
+  Elem = E, E = 'd', board_has_queens(B, J) -> NewElem = 'q', true;
+  Elem = 's' -> NewElem = Elem, true;
+  Elem \= 's', Nl > 4 -> NewElem = Elem, true;
+  write('erro'),false).
 
 board_has_queens(B, J):-
-  (is_par(J):- check_queens_top(B,1,1); check_queens_bot(B,5,1)).
+  (is_par(J) -> check_queens_top(B,1,1); check_queens_bot(B,5,1)).
 
 check_queens_top(B,X,Y):-
 (X = 5 -> true;
   getelem(B, X, Y, Elem),
-  (Elem = 'd' -> write('found drone'), false;
+  (Elem = 'd' -> false;
     (Y = 4 -> Y1 is 1, X1 is X + 1; Y1 is Y + 1, X1 is X),
     check_queens_top(B, X1, Y1))).
 
 check_queens_bot(B,X,Y):-
 (X = 9 -> true;
   getelem(B, X, Y, Elem),
-  (Elem = 'd' -> write('found drone'), false;
+  (Elem = 'd' -> false;
     (Y = 4 -> Y1 is 1, X1 is X + 1; Y1 is Y + 1, X1 is X),
     check_queens_bot(B, X1, Y1))).
 
@@ -121,30 +127,26 @@ board_has_drones(B, J):-
 check_drones_top(B,X,Y):-
 (X = 5 -> true;
   getelem(B, X, Y, Elem),
-  (Elem = 'd' -> write('found drone'), false;
+  (Elem = 'd' -> false;
     (Y = 4 -> Y1 is 1, X1 is X + 1; Y1 is Y + 1, X1 is X),
     check_drones_top(B, X1, Y1))).
 
 check_drones_bot(B,X,Y):-
   (X = 9 -> true;
     getelem(B, X, Y, Elem),
-    (Elem = 'd' -> write('found drone'), false;
+    (Elem = 'd' -> false;
       (Y = 4 -> Y1 is 1, X1 is X + 1; Y1 is Y + 1, X1 is X),
       check_drones_bot(B, X1, Y1))).
 
 pawn_can_move(B,L,C,Nl,Nc, J, Elem2, NewElem):-
-  (check_jogada(B, L, C, Nl, Nc, J, Elem2) ->
-  (Elem2 = 'p' -> (board_has_drones(B, J) -> NewElem = 'd'); false),
-  write('  f  '), write(NewElem),
+  (check_jogada(B, L, C, Nl, Nc, J, Elem2, NewElem) ->
+  NewElem = 'd',
 	DL is abs(Nl-L),
 	DC is abs(Nc-C),
 	(DC=1,DL=1 -> nl ; (write('Jogada invalida_pawn\n') ,false)); write('fail check jogada'), false).
 
 drone_can_move(B,L,C,Nl,Nc, J):-
-  (check_jogada(B, L, C, Nl, Nc, J, Elem2) ->
-  (board_has_queens(B, J) ->
-    (Elem2 = 'd' -> NewElem = 'q'); false
-  ),
+  (check_jogada(B, L, C, Nl, Nc, J, Elem2, NewElem) ->
 	AbsDL is abs(Nl-L),
 	AbsDC is abs(Nc-C),
 	DL is Nl-L,
@@ -162,7 +164,7 @@ drone_can_move(B,L,C,Nl,Nc, J):-
 	); false).
 
 queen_can_move(B, L, C, Nl, Nc, J):-
-  (check_jogada(B, L, C, Nl, Nc, J, Elem2) ->
+  (check_jogada(B, L, C, Nl, Nc, J, Elem2, NewElem) ->
 	DL is Nl-L,
 	DC is Nc-C,
 	(
@@ -219,9 +221,13 @@ update_score(Elem2, Os1, Ns1, Os2, Ns2, J):-
 
 move_piece(B,L,C,Nl,Nc,Nr, J, Os1, Ns1, Os2, Ns2):-
 	getelem(B,L,C,Elem),
+  write('prev: '), write(Elem),
+  nl,
+  getelem(B, Nl, Nc, Elem21),
+  write('next: '), write(Elem21),
   nl,
 	(
-		Elem = 's' -> write('peça invalida\n'), false;
+		Elem = 's' -> write('peca invalida\n'), false;
 		Elem = 'p' -> F is 0;
 		Elem = 'd' -> F is 1;
 		Elem = 'q' -> F is 2
