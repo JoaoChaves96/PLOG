@@ -112,7 +112,7 @@ make_play(B, X, Y, S1, S2, Fs1, Fs2, J):-
 	write('player2 score: '),write(S2),
 	nl,
 	ask_play(B, L, C, Nl, Nc, Nb, J, S1, Ns1, S2, Ns2),
-	clearScreen,
+	%clearScreen,
 	display_full_board(Nb, X, Y, 1),
 	nl,
 	write(Fs1),
