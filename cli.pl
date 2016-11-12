@@ -83,21 +83,28 @@ printInstructionsMenu :-
 			write('######################################################\n'),
 			printBlank(10).
 
-make_play_vs_PC(B, X, Y, S1, S2, J):-
+compare_scores(Fs1, Fs2):-
+	(Fs1 > Fs2 -> write('Player 1 won the game!\n'); write('Player 2 won the game!\n')).
+
+make_play_vs_PC(B, X, Y, S1, S2, Fs1, Fs2, J):-
 	nl,
-	write('player1 score: '),write(S1),
+	write('player1 score: '),write(S1), Ns1 is S1,
 	nl,
-	write('player2 score: '),write(S2),
+	write('player2 score: '),write(S2), Ns2 is S2,
 	nl,
 	(
 		is_par(J) -> get_rand_piece(B, L, C, Nl, Nc, Nb, J, S1, Ns1, S2, Ns2); ask_play(B, L, C, Nl, Nc, Nb, J, S1, Ns1, S2, Ns2)
 	),
-
 	display_full_board(Nb, X, Y, 1),
-	(end_game_p2(Nb, 5) -> write('acabou');
-		write('nao acabou'), J1 is J + 1, make_play_vs_PC(Nb, X, Y, Ns1, Ns2, J1)).
+	((end_game_p2(Nb, 5); end_game_p1(Nb, 1)) ->nl,
+		write('player1 score: '),write(Ns1),
+		nl,
+		write('player2 score: '),write(Ns2),
+		nl,
+		Fs1 is Ns1, Fs2 is Ns2;
+		J1 is J + 1, make_play_vs_PC(Nb, X, Y, Ns1, Ns2, Fs1, Fs2, J1)).
 
-make_play(B, X, Y, S1, S2, J):-
+make_play(B, X, Y, S1, S2, Fs1, Fs2, J):-
 	nl,
 	write('player1 score: '),write(S1),
 	nl,
@@ -105,23 +112,25 @@ make_play(B, X, Y, S1, S2, J):-
 	nl,
 	ask_play(B, L, C, Nl, Nc, Nb, J, S1, Ns1, S2, Ns2),
 	display_full_board(Nb, X, Y, 1),
-	(end_game_p2(Nb, 5) -> write('acabou');
-		write('nao acabou'), J1 is J + 1, make_play(Nb, X, Y, Ns1, Ns2, J1)).
+	nl,
+	write(Fs1),
+	write(' '),
+	write(Fs2),
+	nl,
+	((end_game_p2(Nb, 5); end_game_p1(Nb, 1)) ->	nl,
+		write('player1 score: '),write(Ns1),
+		nl,
+		write('player2 score: '),write(Ns2),
+		nl,
+		Fs1 is Ns1, Fs2 is Ns2;
+		J1 is J + 1, make_play(Nb, X, Y, Ns1, Ns2, Fs1, Fs2, J1)).
 
 play(B, X, Y):-
 	play_game(B, X, Y),
-	/**repeat,
-		ask_play(B, L, C, Nl, Nc, Nb),
-		display_full_board(Nb, X, Y, 1),
-		(end_game_p1(Nb, 1) -> write('acabou'), !;
-			write('nao acabou'), newBoard(B, Nl), fail).*/
-	make_play(B, X, Y, 0, 0, 1).
+	make_play(B, X, Y, 0, 0, Fs1, Fs2, 1),
+	compare_scores(Fs1, Fs2).
 
 play_vs_PC(B, X, Y):-
 	play_game(B, X, Y),
-	/**repeat,
-		ask_play(B, L, C, Nl, Nc, Nb),
-		display_full_board(Nb, X, Y, 1),
-		(end_game_p1(Nb, 1) -> write('acabou'), !;
-			write('nao acabou'), newBoard(B, Nl), fail).*/
-	make_play_vs_PC(B, X, Y, 0, 0, 1).
+	make_play_vs_PC(B, X, Y, 0, 0, Fs1, Fs2, 1),
+	compare_scores(Fs1, Fs2).
