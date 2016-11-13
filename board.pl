@@ -30,14 +30,14 @@ board2([
 		[s,s,s,s]]).
 
 board3([
-		[p,p,d,q],
-		[p,p,p,p],
-		[p,p,p,p],
-		[p,p,p,p],
-		[p,p,p,p],
-		[p,p,p,p],
-		[p,p,p,p],
-		[p,p,d,q]]).
+		[s,s,s,s],
+		[s,s,s,p],
+		[s,s,s,s],
+		[s,s,p,s],
+		[s,q,s,s],
+		[s,s,s,s],
+		[s,s,s,s],
+		[s,s,s,s]]).
 
 %%%%%%%%%%%%%Display board predicates%%%%%%%%%%%%%%%%%%%%%%%%
 display_board_letter:-

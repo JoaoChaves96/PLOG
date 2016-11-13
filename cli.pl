@@ -54,8 +54,8 @@ playMenu :-
 		get_char(In),
 		(
 			In = '1' -> pvpMenu;
-			In = '2' -> play_vs_PC(B, X, Y);
-			In = '3' -> playPC_vs_PC(B, X, Y);
+			In = '2' -> pvPCMenu;
+			In = '3' -> playPC_vs_PC(_, _, _);
 			playMenu
 		),
 		mainMenu.
@@ -114,6 +114,32 @@ color2Menu(C2):-
 		(
 			(C2 < 0;C2 > 10) -> clearScreen, color2Menu(_); true
 		).
+
+
+
+%%%%%%%%%%%%%%%Player vs PC Menu%%%%%%%%%%%%%%%
+pvPCMenu:-
+	clearScreen,
+	printPlayMode,
+	getChar(In),
+	(
+		In = '1' -> play_vs_PC_easy(B, X, Y, 1);
+		In = '2' -> play_vs_PC_hard(B, X, Y, 0);
+		pvPCMenu
+	),
+	mainMenu.
+
+
+printPlayMode:-
+	write('##############################\n'),
+	write('#                            #\n'),
+	write('# Chose a dificculty         #\n'),
+	write('#                            #\n'),
+	write('#  1 - Easy                  #\n'),
+	write('#  2 - Hard                  #\n'),
+	write('#                            #\n'),
+	write('##############################\n'),
+	printBlank(20).
 
 
 %%%%%%%%%%%%%%%Instructions Menu%%%%%%%%%%%%%%%

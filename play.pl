@@ -34,19 +34,22 @@ check_jogada(B, L, C, Nl, Nc, J, Elem2, NewElem):-
 check_jogada1(B, J, L, C, Nl, Elem, NewElem):-
   getelem(B, L, C, E),
   write('check jogada 1'), write(Elem), write(' '), write(E), nl,
-  (Elem = E, E = 'p', board_has_drones(B, J) -> NewElem = 'd', true;
+  (
+  Elem \= 's', Nl < 5 -> NewElem = E, true;
+  Elem = E, E = 'p', board_has_drones(B, J) -> NewElem = 'd', true;
   Elem = 'd', E = 'p', board_has_queens(B, J) -> NewElem = 'q', true;
   Elem = 'p', E = 'd', board_has_queens(B, J) -> NewElem = 'q', true;
   Elem = 's' -> NewElem = E, true;
-  Elem \= 's', Nl < 5 -> NewElem = Elem, true;
   write('erro jogada'), false).
 
 check_jogada2(B, J, L, C, Nl, Elem, NewElem):-
   getelem(B, L, C, E),
-  (Elem = E, E = 'p', board_has_drones(B, J) -> NewElem = 'd', true;
-  Elem = E, E = 'd', board_has_queens(B, J) -> NewElem = 'q', true;
-  Elem = 's' -> NewElem = E, true;
+  (
   Elem \= 's', Nl > 4 -> NewElem = E, true;
+  Elem = E, E = 'p', board_has_drones(B, J) -> NewElem = 'd', true;
+  Elem = 'd', E = 'p', board_has_queens(B, J) -> NewElem = 'q', true;
+  Elem = 'p', E = 'd', board_has_queens(B, J) -> NewElem = 'q', true;
+  Elem = 's' -> NewElem = E, true;
   write('erro'),false).
 
 
@@ -55,7 +58,7 @@ pawn_can_move(B,L,C,Nl,Nc, J, Elem2, NewElem):-
   (check_jogada(B, L, C, Nl, Nc, J, Elem2, NewElem) ->
 	DL is abs(Nl-L),
 	DC is abs(Nc-C),
-	(DC=1,DL=1 -> nl ; (write('Jogada invalida_pawn\n') ,false)); write('fail check jogada'), false).
+	(DC=1,DL=1 -> true ; (write('Jogada invalida_pawn\n') ,false)); write('fail check jogada'), false).
 
 
 %%%%%%%%%%%%%%%Chceks the move of the drone%%%%%%%%%%%%%%%
@@ -166,9 +169,9 @@ move_piece_PC(B,L,C,Nl,Nc,Nr, J, Os1, Ns1, Os2, Ns2):-
 
 		NLi is Nl - 1,
 		NCi is Nc - 1,
-
+    write(Nl), write(Os1), write(Ns1), write(Os2), write(Ns2), nl,
 	(
-		F = 0 -> (pawn_can_move(B, L, C, Nl, Nc, J, Elem3, NewElem) -> replace(B, Li, Ci, 's', N), getelem(B, Nl, Nc, Elem2), update_score(Nl, Elem2, Os1, Ns1, Os2, Ns2, J), replace(N,NLi, NCi,NewElem, Nr); false);
+		F = 0 -> (pawn_can_move(B, L, C, Nl, Nc, J, Elem3, NewElem) -> replace(B, Li, Ci, 's', N),getelem(B, Nl, Nc, Elem2), write('before'),update_score(Nl, Elem2, Os1, Ns1, Os2, Ns2, J),write('passou o update'), replace(N,NLi, NCi,NewElem, Nr), write('move done'); false);
 		F = 1 -> (drone_can_move(B, L, C, Nl, Nc, J, Elem3, NewElem) -> replace(B, Li, Ci, 's', N), getelem(B, Nl, Nc, Elem2), update_score(Nl, Elem2, Os1, Ns1, Os2, Ns2, J), replace(N,NLi, NCi,NewElem, Nr); false);
 		F = 2 -> (queen_can_move(B, L, C, Nl, Nc, J, Elem3, NewElem) -> replace(B, Li, Ci, 's', N), getelem(B, Nl, Nc, Elem2), update_score(Nl, Elem2, Os1, Ns1, Os2, Ns2, J), replace(N,NLi, NCi,NewElem, Nr); false)
 	).
@@ -179,12 +182,12 @@ move(L, _, J, S1, Ns1, S2, Ns2):-
 	(is_par(J) ->  L < 5, Ns1 is S1; L > 4, Ns2 is S2).
 
 
-%%%%%%%%%%%%%%%Asks for plays in the Player vs Pc mode%%%%%%%%%%%%%%%
-make_play_vs_PC(B, X, Y, S1, S2, Fs1, Fs2, J):-
+%%%%%%%%%%%%%%%Asks for plays in the Player vs PC easy mode%%%%%%%%%%%%%%%
+make_play_vs_PC_easy(B, X, Y, S1, S2, Fs1, Fs2, J):-
 	nl,
-	write('player1 score: '),write(S1), Ns1 is S1,
+	write('player1 score: '),write(S1),
 	nl,
-	write('player2 score: '),write(S2), Ns2 is S2,
+	write('player2 score: '),write(S2),
 	nl,
 	nl,
 	(
@@ -200,20 +203,21 @@ make_play_vs_PC(B, X, Y, S1, S2, Fs1, Fs2, J):-
 		printGameOver,
 		nl,
 		nl,
-		Fs1 is Ns1, Fs2 is Ns2;
-	  make_play_vs_PC(Nb, X, Y, Ns1, Ns2, Fs1, Fs2, J1)).
+		Fs1 is S1, Fs2 is S2;
+	  make_play_vs_PC_easy(Nb, X, Y, Ns1, Ns2, Fs1, Fs2, J1)).
 
 
-%%%%%%%%%%%%%%%Asks for plays in the Player vs Player mode%%%%%%%%%%%%%%%
-make_playPC_vs_PC(B, X, Y, S1, S2, Fs1, Fs2, J):-
+%%%%%%%%%%%%%%%Asks for plays in the Player vs PC hard mode%%%%%%%%%%%%%%%
+make_play_vs_PC_hard(B, X, Y, S1, S2, Fs1, Fs2, J):-
 	nl,
-	write('player1 score: '),write(S1), Ns1 is S1,
+	write('player1 score: '),write(S1),
 	nl,
-	write('player2 score: '),write(S2), Ns2 is S2,
+	write('player2 score: '),write(S2),
 	nl,
 	nl,
-  get_char(_),
-  get_rand_piece(B, Nb, J, S1, Ns1, S2, Ns2),
+	(
+		is_par(J) -> best_play(B, Nb, J, S1, Ns1, S2, Ns2); printPlayerTurn(J), nl, nl, ask_play(B, Nb, J, S1, Ns1, S2, Ns2)
+	),
 	clearScreen,
 	display_full_board(Nb, X, Y),
 	J1 is J + 1,
@@ -224,7 +228,31 @@ make_playPC_vs_PC(B, X, Y, S1, S2, Fs1, Fs2, J):-
 		printGameOver,
 		nl,
 		nl,
-	  Fs1 is Ns1, Fs2 is Ns2;
+		Fs1 is S1, Fs2 is S2;
+	  make_play_vs_PC_hard(Nb, X, Y, Ns1, Ns2, Fs1, Fs2, J1)).
+
+
+%%%%%%%%%%%%%%%Asks for plays in the Player vs Player mode%%%%%%%%%%%%%%%
+make_playPC_vs_PC(B, X, Y, S1, S2, Fs1, Fs2, J):-
+	nl,
+	write('player1 score: '),write(S1),
+	nl,
+	write('player2 score: '),write(S2),
+	nl,
+	nl,
+  get_char(_),
+  best_play(B, Nb, J, S1, Ns1, S2, Ns2),
+	clearScreen,
+	display_full_board(Nb, X, Y),
+	J1 is J + 1,
+	((end_game_p2(Nb, 5); end_game_p1(Nb, 1)) ->
+		clearScreen,
+		display_full_board(Nb, X, Y),
+		nl,
+		printGameOver,
+		nl,
+		nl,
+	  Fs1 is S1, Fs2 is S2;
 	  make_playPC_vs_PC(Nb, X, Y, Ns1, Ns2, Fs1, Fs2, J1)).
 
 
@@ -249,13 +277,13 @@ make_play(B, X, Y, S1, S2, Fs1, Fs2, J):-
 		printGameOver,
 		nl,
 		nl,
-		Fs1 is Ns1, Fs2 is Ns2;
+		Fs1 is S1, Fs2 is S2;
 		make_play(Nb, X, Y, Ns1, Ns2, Fs1, Fs2, J1)).
 
 
 %%%%%%%%%%%%%%%Main predicate of the Player vs Player mode%%%%%%%%%%%%%%%
 play(B, X, Y, J):-
-  board2(B),
+  board3(B),
 	getChar(_),
   display_full_board(B, X, Y),
   nl,
@@ -264,17 +292,30 @@ play(B, X, Y, J):-
 	mainMenu.
 
 
-%%%%%%%%%%%%%%%Main predicate of the Player vs PC mode%%%%%%%%%%%%%%%
-play_vs_PC(B, X, Y):-
-  board(B),
+%%%%%%%%%%%%%%%Main predicate of the Player vs PC easy mode%%%%%%%%%%%%%%%
+play_vs_PC_easy(B, X, Y, J):-
+  board3(B),
   clearScreen,
   display_full_board(B, X, Y),
 	nl,
   get_char(_),
-	make_play_vs_PC(B, X, Y, 0, 0, Fs1, Fs2, 1),
+	make_play_vs_PC_easy(B, X, Y, 0, 0, Fs1, Fs2, J),
 	compare_scores(Fs1, Fs2, 1),
 	mainMenu.
 
+%%%%%%%%%%%%%%%Main predicate of the Player vs PC hard mode%%%%%%%%%%%%%%%
+play_vs_PC_hard(B, X, Y, J):-
+  board3(B),
+  clearScreen,
+  display_full_board(B, X, Y),
+	nl,
+  get_char(_),
+	make_play_vs_PC_hard(B, X, Y, 0, 0, Fs1, Fs2, J),
+	compare_scores(Fs1, Fs2, 1),
+	mainMenu.
+
+
+%%%%%%%%%%%%%%%Main predicate of the PC vs PC mode%%%%%%%%%%%%%%%
 playPC_vs_PC(B, X, Y):-
   board3(B),
   clearScreen,

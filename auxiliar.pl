@@ -64,12 +64,12 @@ update_score(Nl, Elem2, Os1, Ns1, Os2, Ns2, J):-
   ),
   (is_par(J) ->
     (Nl > 4 ->
-      Ns2 is (Os2 + P); Ns2 is Os2,nl
-    );
+      Ns2 is Os2 + P; Ns2 is Os2
+    ), Ns1 is Os1;
     (Nl < 5 ->
-      Ns1 is (Os1 + P); Ns1 is Os1
-    )
-  ).
+      Ns1 is Os1 + P; Ns1 is Os1
+    ), Ns2 is Os2
+  ), write('reached the end').
 
 is_par(J):-
 	X is J mod 2,
