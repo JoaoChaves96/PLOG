@@ -1,3 +1,4 @@
+%%%%%%%%%%%%%%%%%%%%Check the path of the new play%%%%%%%%%%%%%%%%%%%%%%%%%%%
 check_path_col(B, Nl, C, Nc, Inc):-
   Fc is Nc - Inc,
 	(C = Fc -> write('path_col valido\n'), true;
@@ -22,6 +23,8 @@ check_path_line_col(B, L, C, Nl, Nc, IncL, IncC):-
 	getelem(B, NextL, NextC, Elem),
 	(Elem \= 's' -> write('path invalido\n'), false; check_path_line_col(B, NextL, NextC, Nl, Nc, IncL, IncC))).
 
+
+%%%%%%%%%%%%%%%Check if a move is possible%%%%%%%%%%%%%%%%%%%%
 check_jogada(B, L, C, Nl, Nc, J, Elem2, NewElem):-
   getelem(B, Nl, Nc, Elem2),
   (
@@ -45,12 +48,16 @@ check_jogada2(B, J, L, C, Nl, Elem, NewElem):-
   Elem \= 's', Nl > 4 -> NewElem = E, true;
   write('erro'),false).
 
+
+%%%%%%%%%%%%%%%Chceks the move of the pawn%%%%%%%%%%%%%%
 pawn_can_move(B,L,C,Nl,Nc, J, Elem2, NewElem):-
   (check_jogada(B, L, C, Nl, Nc, J, Elem2, NewElem) ->
 	DL is abs(Nl-L),
 	DC is abs(Nc-C),
 	(DC=1,DL=1 -> nl ; (write('Jogada invalida_pawn\n') ,false)); write('fail check jogada'), false).
 
+
+%%%%%%%%%%%%%%%Chceks the move of the drone%%%%%%%%%%%%%%%
 drone_can_move(B,L,C,Nl,Nc, J, Elem2, NewElem):-
   (check_jogada(B, L, C, Nl, Nc, J, Elem2, NewElem) ->
 	AbsDL is abs(Nl-L),
@@ -69,6 +76,8 @@ drone_can_move(B,L,C,Nl,Nc, J, Elem2, NewElem):-
 		nl
 	); false).
 
+
+%%%%%%%%%%%%%%%Chceks the move of the queen%%%%%%%%%%%%%%%
 queen_can_move(B, L, C, Nl, Nc, J, Elem2, NewElem):-
   (check_jogada(B, L, C, Nl, Nc, J, Elem2, NewElem) ->
 	DL is Nl-L,
@@ -97,6 +106,8 @@ queen_can_move(B, L, C, Nl, Nc, J, Elem2, NewElem):-
   );
   false).
 
+
+%%%%%%%%%%%%%%%Check if each side of the board is empty%%%%%%%%%%%%%%%
 end_game_p1(B, C):-
 	C = 5 -> true;
 	nth1(C, B, Elem),
@@ -114,6 +125,8 @@ end_game_p2(B, C):-
   	C1 is C + 1,
   	end_game_p2(B, C1)).
 
+
+%%%%%%%%%%%%%%%The player tries to make a new move%%%%%%%%%%%%%%%
 move_piece(B,L,C,Nl,Nc,Nr, J, Os1, Ns1, Os2, Ns2):-
 	getelem(B,L,C,Elem),
   write('prev: '), write(Elem),
@@ -135,11 +148,13 @@ move_piece(B,L,C,Nl,Nc,Nr, J, Os1, Ns1, Os2, Ns2):-
 		NCi is Nc - 1,
 
 	(
-		F = 0 -> (pawn_can_move(B, L, C, Nl, Nc, J, Elem3, NewElem) -> replace(B, Li, Ci, 's', N), getelem(B, Nl, Nc, Elem2), update_score(NLi, Elem2, Os1, Ns1, Os2, Ns2, J), replace(N,NLi, NCi,NewElem, Nr); false);
-		F = 1 -> (drone_can_move(B, L, C, Nl, Nc, J, Elem3, NewElem) -> replace(B, Li, Ci, 's', N), getelem(B, Nl, Nc, Elem2), update_score(NLi, Elem2, Os1, Ns1, Os2, Ns2, J), replace(N,NLi, NCi,NewElem, Nr); false);
-		F = 2 -> (queen_can_move(B, L, C, Nl, Nc, J, Elem3, NewElem) -> replace(B, Li, Ci, 's', N), getelem(B, Nl, Nc, Elem2), update_score(NLi, Elem2, Os1, Ns1, Os2, Ns2, J), replace(N,NLi, NCi,NewElem, Nr); false)
+		F = 0 -> (pawn_can_move(B, L, C, Nl, Nc, J, Elem3, NewElem) -> replace(B, Li, Ci, 's', N), getelem(B, Nl, Nc, Elem2), update_score(Nl, Elem2, Os1, Ns1, Os2, Ns2, J), replace(N,NLi, NCi,NewElem, Nr); false);
+		F = 1 -> (drone_can_move(B, L, C, Nl, Nc, J, Elem3, NewElem) -> replace(B, Li, Ci, 's', N), getelem(B, Nl, Nc, Elem2), update_score(Nl, Elem2, Os1, Ns1, Os2, Ns2, J), replace(N,NLi, NCi,NewElem, Nr); false);
+		F = 2 -> (queen_can_move(B, L, C, Nl, Nc, J, Elem3, NewElem) -> replace(B, Li, Ci, 's', N), getelem(B, Nl, Nc, Elem2), update_score(Nl, Elem2, Os1, Ns1, Os2, Ns2, J), replace(N,NLi, NCi,NewElem, Nr); false)
 	).
 
+
+%%%%%%%%%%%%%%%The PC tries to make a new move%%%%%%%%%%%%%%%
 move_piece_PC(B,L,C,Nl,Nc,Nr, J, Os1, Ns1, Os2, Ns2):-
 	getelem(B,L,C,Elem),
 	(
@@ -156,14 +171,18 @@ move_piece_PC(B,L,C,Nl,Nc,Nr, J, Os1, Ns1, Os2, Ns2):-
 		NCi is Nc - 1,
 
 	(
-		F = 0 -> (pawn_can_move(B, L, C, Nl, Nc, J, Elem3, NewElem) -> replace(B, Li, Ci, 's', N), getelem(B, Nl, Nc, Elem2), update_score(NLi, Elem2, Os1, Ns1, Os2, Ns2, J), replace(N,NLi, NCi,NewElem, Nr); false);
-		F = 1 -> (drone_can_move(B, L, C, Nl, Nc, J, Elem3, NewElem) -> replace(B, Li, Ci, 's', N), getelem(B, Nl, Nc, Elem2), update_score(NLi, Elem2, Os1, Ns1, Os2, Ns2, J), replace(N,NLi, NCi,NewElem, Nr); false);
-		F = 2 -> (queen_can_move(B, L, C, Nl, Nc, J, Elem3, NewElem) -> replace(B, Li, Ci, 's', N), getelem(B, Nl, Nc, Elem2), update_score(NLi, Elem2, Os1, Ns1, Os2, Ns2, J), replace(N,NLi, NCi,NewElem, Nr); false)
+		F = 0 -> (pawn_can_move(B, L, C, Nl, Nc, J, Elem3, NewElem) -> replace(B, Li, Ci, 's', N), getelem(B, Nl, Nc, Elem2), update_score(Nl, Elem2, Os1, Ns1, Os2, Ns2, J), replace(N,NLi, NCi,NewElem, Nr); false);
+		F = 1 -> (drone_can_move(B, L, C, Nl, Nc, J, Elem3, NewElem) -> replace(B, Li, Ci, 's', N), getelem(B, Nl, Nc, Elem2), update_score(Nl, Elem2, Os1, Ns1, Os2, Ns2, J), replace(N,NLi, NCi,NewElem, Nr); false);
+		F = 2 -> (queen_can_move(B, L, C, Nl, Nc, J, Elem3, NewElem) -> replace(B, Li, Ci, 's', N), getelem(B, Nl, Nc, Elem2), update_score(Nl, Elem2, Os1, Ns1, Os2, Ns2, J), replace(N,NLi, NCi,NewElem, Nr); false)
 	).
 
+
+%%%%%%%%%%%%%%%Checks the score in each move%%%%%%%%%%%%%%%
 move(L, _, J, S1, Ns1, S2, Ns2):-
 	(is_par(J) ->  L < 5, Ns1 is S1; L > 4, Ns2 is S2).
 
+
+%%%%%%%%%%%%%%%Asks for plays in the Player vs Pc mode%%%%%%%%%%%%%%%
 make_play_vs_PC(B, X, Y, S1, S2, Fs1, Fs2, J):-
 	nl,
 	write('player1 score: '),write(S1), Ns1 is S1,
@@ -187,6 +206,8 @@ make_play_vs_PC(B, X, Y, S1, S2, Fs1, Fs2, J):-
 		Fs1 is Ns1, Fs2 is Ns2;
 	  make_play_vs_PC(Nb, X, Y, Ns1, Ns2, Fs1, Fs2, J1)).
 
+
+%%%%%%%%%%%%%%%Asks for plays in the Player vs Player mode%%%%%%%%%%%%%%%
 make_play(B, X, Y, S1, S2, Fs1, Fs2, J):-
 	nl,
 	write(X), write(' score: '),write(S1),
@@ -210,15 +231,21 @@ make_play(B, X, Y, S1, S2, Fs1, Fs2, J):-
 		Fs1 is Ns1, Fs2 is Ns2;
 		make_play(Nb, X, Y, Ns1, Ns2, Fs1, Fs2, J1)).
 
+
+%%%%%%%%%%%%%%%Main predicate of the Player vs Player mode%%%%%%%%%%%%%%%
 play(B, X, Y):-
+  board(B),
 	getChar(_),
-	nl,
-	play_game(B, X, Y),
+  display_full_board(B, X, Y),
+  nl,
 	make_play(B, X, Y, 0, 0, Fs1, Fs2, 1),
 	compare_scores(Fs1, Fs2, 0),
 	mainMenu.
 
+
+%%%%%%%%%%%%%%%Main predicate of the Player vs PC mode%%%%%%%%%%%%%%%
 play_vs_PC(B, X, Y):-
+  board(B),
 	Y = 'Computer',
   display_full_board(B, X, Y),
 	nl,

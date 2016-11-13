@@ -1,3 +1,4 @@
+%%%%%%%%%%%%%%%Tries a random move to the piece given%%%%%%%%%%%%%%%
 random_play(B, L, C, Nb, J, S1, Ns1, S2, Ns2):-
   random(1,8,X),
   random(1,4,Y),
@@ -6,6 +7,7 @@ random_play(B, L, C, Nb, J, S1, Ns1, S2, Ns2):-
   ).
 
 
+%%%%%%%%%%%%%%%Gets a random piece from mthe board%%%%%%%%%%%%%%%
 get_rand_piece(B, Nb, J, S1, Ns1, S2, Ns2):-
   (
     is_par(J) -> random(1,4,X); random(5,8,X)

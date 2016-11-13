@@ -1,5 +1,4 @@
 %%%%%%%%%%%ClearScreen%%%%%%%%%%%%%%%%%%
-
 clearScreen :-
 		printBlank(65).
 
@@ -11,11 +10,15 @@ printBlank(A) :-
 
 printBlank(_).
 
+
+%%%%%%%%%%%%%%%Asks for the player name%%%%%%%%%%%%%%%
 read_player(X):-
 	write('player name: '),
 	read(X),
 	nl.
 
+
+%%%%%%%%%%%%%%%Main Menu%%%%%%%%%%%%%%%
 mainMenu :-
 		clearScreen,
 		printMainMenu,
@@ -44,6 +47,7 @@ printMainMenu :-
 			printBlank(20).
 
 
+%%%%%%%%%%%%%%%Play Menu%%%%%%%%%%%%%%%
 playMenu :-
 		clearScreen,
 		printPlayMenu,
@@ -68,13 +72,14 @@ printPlayMenu:-
 	write('##############################\n'),
 	printBlank(20).
 
+
+%%%%%%%%%%%%%%%Instructions Menu%%%%%%%%%%%%%%%
 instructionsMenu :-
 			clearScreen,
 			printInstructionsMenu,
 			get_char(_),
 			get_char(_),
 			mainMenu.
-
 
 printInstructionsMenu :-
 			write('######################################################\n'),
@@ -103,6 +108,7 @@ printInstructionsMenu :-
 			printBlank(10).
 
 
+%%%%%%%%%%%%%%%Turns and, game over and win prints%%%%%%%%%%%%%%%
 printPlayer1Turn:-
 	write('########################################\n'),
 	write('#            Player 1 Turn             #\n'),
@@ -144,6 +150,8 @@ printComputerWin:-
 printPlayerTurn(J):-
 	(is_par(J) -> printPlayer2Turn; printPlayer1Turn).
 
+
+%%%%%%%%%%%%%%%Asks the player for a new play%%%%%%%%%%%%%%%
 ask_play(B, Nb, J, S1, Ns1, S2, Ns2) :-
 	write('Digite a linha (numero) da peca a mover'), nl,
 	getDigit(LinhaToMove),
@@ -162,6 +170,8 @@ ask_play(B, Nb, J, S1, Ns1, S2, Ns2) :-
 	(move(LinhaToMove, Yi, J, S1, Ns1, S2, Ns2), move_piece(B, LinhaToMove, Yi, LinhaDestino, Yf, Nb, J, S1, Ns1, S2, Ns2) -> true; ask_play(B, Nb, J, S1, Ns1, S2, Ns2)).
 
 
+%%%%%%%%%%%%%%%Compares the scores to chose the winner%%%%%%%%%%%%%%%
 compare_scores(Fs1, Fs2, F):-
 	(Fs1 > Fs2 -> printPlayer1Win; (F = 1 -> printComputerWin;printPlayer2Win)),
+	printBlank(15),
 	getChar(_).

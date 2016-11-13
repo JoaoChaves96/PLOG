@@ -53,6 +53,8 @@ replace( L , X , Y , Z , R ) :-
   append(RowPfx,[RowNew|RowSfx],R) .  % and assemble the transformed list-of-lists
   					%
 
+
+%%%%%%%%%%%%%%%Updates the score%%%%%%%%%%%%%%%
 update_score(Nl, Elem2, Os1, Ns1, Os2, Ns2, J):-
   (
     Elem2 = 'p' -> P is 1;
@@ -60,10 +62,9 @@ update_score(Nl, Elem2, Os1, Ns1, Os2, Ns2, J):-
     Elem2 = 'q' -> P is 3;
     P is 0
   ),
-
   (is_par(J) ->
     (Nl > 4 ->
-      Ns2 is (Os2 + P); Ns2 is Os2
+      Ns2 is (Os2 + P); Ns2 is Os2,nl
     );
     (Nl < 5 ->
       Ns1 is (Os1 + P); Ns1 is Os1
