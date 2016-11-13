@@ -178,7 +178,7 @@ move_piece_PC(B,L,C,Nl,Nc,Nr, J, Os1, Ns1, Os2, Ns2):-
 
 
 %%%%%%%%%%%%%%%Checks the score in each move%%%%%%%%%%%%%%%
-move(L, _, J, S1, Ns1, S2, Ns2):-
+move(L, J, S1, Ns1, S2, Ns2):-
 	(is_par(J) ->  L < 5, Ns1 is S1; L > 4, Ns2 is S2).
 
 
@@ -191,7 +191,7 @@ make_play_vs_PC_easy(B, X, Y, S1, S2, Fs1, Fs2, J):-
 	nl,
 	nl,
 	(
-		is_par(J) -> get_rand_piece(B, Nb, J, S1, Ns1, S2, Ns2); printPlayerTurn(J), nl, nl, ask_play(B, Nb, J, S1, Ns1, S2, Ns2)
+		is_par(J) -> get_char(_), rand_play(B, Nb, J, S1, Ns1, S2, Ns2); printPlayerTurn(J), nl, nl, ask_play(B, Nb, J, S1, Ns1, S2, Ns2)
 	),
 	clearScreen,
 	display_full_board(Nb, X, Y),
@@ -216,7 +216,7 @@ make_play_vs_PC_hard(B, X, Y, S1, S2, Fs1, Fs2, J):-
 	nl,
 	nl,
 	(
-		is_par(J) -> best_play(B, Nb, J, S1, Ns1, S2, Ns2); printPlayerTurn(J), nl, nl, ask_play(B, Nb, J, S1, Ns1, S2, Ns2)
+		is_par(J) -> get_char(_), best_play(B, Nb, J, S1, Ns1, S2, Ns2); printPlayerTurn(J), nl, nl, ask_play(B, Nb, J, S1, Ns1, S2, Ns2)
 	),
 	clearScreen,
 	display_full_board(Nb, X, Y),
@@ -283,7 +283,7 @@ make_play(B, X, Y, S1, S2, Fs1, Fs2, J):-
 
 %%%%%%%%%%%%%%%Main predicate of the Player vs Player mode%%%%%%%%%%%%%%%
 play(B, X, Y, J):-
-  board3(B),
+  board(B),
 	getChar(_),
   display_full_board(B, X, Y),
   nl,
@@ -294,7 +294,7 @@ play(B, X, Y, J):-
 
 %%%%%%%%%%%%%%%Main predicate of the Player vs PC easy mode%%%%%%%%%%%%%%%
 play_vs_PC_easy(B, X, Y, J):-
-  board3(B),
+  board(B),
   clearScreen,
   display_full_board(B, X, Y),
 	nl,
@@ -317,7 +317,7 @@ play_vs_PC_hard(B, X, Y, J):-
 
 %%%%%%%%%%%%%%%Main predicate of the PC vs PC mode%%%%%%%%%%%%%%%
 playPC_vs_PC(B, X, Y):-
-  board3(B),
+  board(B),
   clearScreen,
   display_full_board(B, X, Y),
 	nl,

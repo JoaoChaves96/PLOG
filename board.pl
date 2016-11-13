@@ -31,10 +31,10 @@ board2([
 
 board3([
 		[s,s,s,s],
-		[s,s,s,p],
 		[s,s,s,s],
-		[s,s,p,s],
-		[s,q,s,s],
+		[s,s,s,s],
+		[s,s,s,q],
+		[s,s,d,s],
 		[s,s,s,s],
 		[s,s,s,s],
 		[s,s,s,s]]).

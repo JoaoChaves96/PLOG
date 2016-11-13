@@ -236,7 +236,7 @@ ask_play(B, Nb, J, S1, Ns1, S2, Ns2) :-
 	getChar(ColunaDestino),
 	letra(ColunaDestino, X, L1),
 	letterToNumber(ColunaDestino,Yf),
-	(move(LinhaToMove, Yi, J, S1, Ns1, S2, Ns2), move_piece(B, LinhaToMove, Yi, LinhaDestino, Yf, Nb, J, S1, Ns1, S2, Ns2) -> true;
+	(move(LinhaToMove, J, S1, Ns1, S2, Ns2), move_piece(B, LinhaToMove, Yi, LinhaDestino, Yf, Nb, J, S1, Ns1, S2, Ns2) -> true;
 		nl,
 		write('Jogada invalida! Try again...\n'),
 		nl,
