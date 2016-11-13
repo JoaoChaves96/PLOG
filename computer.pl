@@ -1,19 +1,19 @@
-random_play(B, L, C, Nl, Nc, Nb, J, S1, Ns1, S2, Ns2):-
+random_play(B, L, C, Nb, J, S1, Ns1, S2, Ns2):-
   random(1,8,X),
   random(1,4,Y),
   (
-    (move(L, C, J, S1, Ns1, S2, Ns2) -> (move_piece_PC(B, L, C, X, Y, Nb, J, S1, Ns1, S2, Ns2) -> true;get_rand_piece(B, L1, C1, Nl, Nc, Nb, J, S1, Ns1, S2, Ns2)); get_rand_piece(B, L1, C1, Nl, Nc, Nb, J, S1, Ns1, S2, Ns2))
+    (move(L, C, J, S1, Ns1, S2, Ns2) -> (move_piece_PC(B, L, C, X, Y, Nb, J, S1, Ns1, S2, Ns2) -> true;get_rand_piece(B, Nb, J, S1, Ns1, S2, Ns2)); get_rand_piece(B, Nb, J, S1, Ns1, S2, Ns2))
   ).
 
 
-get_rand_piece(B, L, C, Nl, Nc, Nb, J, S1, Ns1, S2, Ns2):-
+get_rand_piece(B, Nb, J, S1, Ns1, S2, Ns2):-
   (
     is_par(J) -> random(1,4,X); random(5,8,X)
   ),
   random(1,4,Y),
   getelem(B, X, Y, Elem),
   (
-    Elem \= 's' -> random_play(B, X, Y, Nl, Nc, Nb, J, S1, Ns1, S2, Ns2); get_rand_piece(B, L1, C1, Nl1, Nc1, Nb, J, S1, Ns1, S2, Ns2)
+    Elem \= 's' -> random_play(B, X, Y, Nb, J, S1, Ns1, S2, Ns2); get_rand_piece(B, Nb, J, S1, Ns1, S2, Ns2)
   ).
 
 /**process_pieces(J, X, Y, Nl, Nc, BL, BC, NBl, NBc):-
