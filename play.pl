@@ -33,12 +33,13 @@ check_jogada(B, L, C, Nl, Nc, J, Elem2, NewElem):-
 
 check_jogada1(B, J, L, C, Nl, Elem, NewElem):-
   getelem(B, L, C, E),
-  write('check jogada 1'), write(Elem), nl,
+  write('check jogada 1'), write(Elem), write(' '), write(E), nl,
   (Elem = E, E = 'p', board_has_drones(B, J) -> NewElem = 'd', true;
-  Elem = E, E = 'd', board_has_queens(B, J) -> NewElem = 'q', true;
+  Elem = 'd', E = 'p', board_has_queens(B, J) -> NewElem = 'q', true;
+  Elem = 'p', E = 'd', board_has_queens(B, J) -> NewElem = 'q', true;
   Elem = 's' -> NewElem = E, true;
   Elem \= 's', Nl < 5 -> NewElem = Elem, true;
-  write('erro'), false).
+  write('erro jogada'), false).
 
 check_jogada2(B, J, L, C, Nl, Elem, NewElem):-
   getelem(B, L, C, E),
@@ -129,10 +130,6 @@ end_game_p2(B, C):-
 %%%%%%%%%%%%%%%The player tries to make a new move%%%%%%%%%%%%%%%
 move_piece(B,L,C,Nl,Nc,Nr, J, Os1, Ns1, Os2, Ns2):-
 	getelem(B,L,C,Elem),
-  write('prev: '), write(Elem),
-  nl,
-  getelem(B, Nl, Nc, Elem21),
-  write('next: '), write(Elem21),
   nl,
 	(
 		Elem = 's' -> write('peca invalida\n'), false;
@@ -233,12 +230,12 @@ make_play(B, X, Y, S1, S2, Fs1, Fs2, J):-
 
 
 %%%%%%%%%%%%%%%Main predicate of the Player vs Player mode%%%%%%%%%%%%%%%
-play(B, X, Y):-
-  board(B),
+play(B, X, Y, J):-
+  board2(B),
 	getChar(_),
   display_full_board(B, X, Y),
   nl,
-	make_play(B, X, Y, 0, 0, Fs1, Fs2, 1),
+	make_play(B, X, Y, 0, 0, Fs1, Fs2, J),
 	compare_scores(Fs1, Fs2, 0),
 	mainMenu.
 

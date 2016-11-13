@@ -25,8 +25,8 @@ board2([
 		[q,q,q,q],
 		[q,q,q,q],
 		[s,s,s,s],
-		[s,p,s,s],
-		[p,s,q,s],
+		[s,d,s,s],
+		[p,s,d,s],
 		[s,s,s,s]]).
 
 
@@ -81,14 +81,14 @@ board_has_queens(B, J):-
 check_queens_top(B,X,Y):-
   (X = 5 -> true;
     getelem(B, X, Y, Elem),
-    (Elem = 'd' -> false;
+    (Elem = 'q' -> false;
       (Y = 4 -> Y1 is 1, X1 is X + 1; Y1 is Y + 1, X1 is X),
     check_queens_top(B, X1, Y1))).
 
 check_queens_bot(B,X,Y):-
   (X = 9 -> true;
     getelem(B, X, Y, Elem),
-    (Elem = 'd' -> false;
+    (Elem = 'q' -> false;
       (Y = 4 -> Y1 is 1, X1 is X + 1; Y1 is Y + 1, X1 is X),
       check_queens_bot(B, X1, Y1))).
 

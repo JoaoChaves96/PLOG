@@ -53,7 +53,7 @@ playMenu :-
 		printPlayMenu,
 		get_char(In),
 		(
-			In = '1' -> play(B, X, Y);
+			In = '1' -> pvpMenu;
 			In = '2' -> play_vs_PC(B, X, Y);
 			In = '3' -> play_vs_PC(B, X, Y);
 			playMenu
@@ -71,6 +71,45 @@ printPlayMenu:-
 	write('#                            #\n'),
 	write('##############################\n'),
 	printBlank(20).
+
+
+%%%%%%%%%%%%%%%Player vs Player initiation menu%%%%%%%%%%%%%%%
+pvpMenu:-
+		clearScreen,
+		color1Menu(C1),
+		clearScreen,
+		color2Menu(C2),
+		clearScreen,
+		(
+			C1 > C2 -> play(B, X, Y, 1);
+								 play(B, X, Y, 0)
+		),
+		mainMenu.
+
+
+color1Menu(C1):-
+		printPlayer1Turn,
+		nl,
+		write('From 0 to 10, how red is your hair? :)'),
+		nl,
+		get_char(_),
+		get_code(C11),
+		C1 is C11 - 48,
+		(
+			(C1 < 0;C1 > 10) -> clearScreen, color1Menu(_); true
+		).
+
+color2Menu(C2):-
+		printPlayer2Turn,
+		nl,
+		write('From 0 to 10, how red is your hair? :)'),
+		nl,
+		get_char(_),
+		get_code(C21),
+		C2 is C21 - 48,
+		(
+			(C2 < 0;C2 > 10) -> clearScreen, color2Menu(_); true
+		).
 
 
 %%%%%%%%%%%%%%%Instructions Menu%%%%%%%%%%%%%%%
@@ -155,19 +194,23 @@ printPlayerTurn(J):-
 ask_play(B, Nb, J, S1, Ns1, S2, Ns2) :-
 	write('Digite a linha (numero) da peca a mover'), nl,
 	getDigit(LinhaToMove),
-	%numero(LinhaToMove, X, L1),
+	numero(LinhaToMove, X, L1),
 	write('Digite a coluna (letra) da peca a mover'), nl,
 	getChar(ColunaToMove),
-	%letra(ColunaToMove, X, L1),
+	letra(ColunaToMove, X, L1),
 	letterToNumber(ColunaToMove,Yi),
  	write('Digite a linha (numero) do destino'), nl,
 	getDigit(LinhaDestino),
-	%numero(LinhaDestino, X, L1),
+	numero(LinhaDestino, X, L1),
 	write('Digite a coluna (letra) do destino'), nl,
 	getChar(ColunaDestino),
-	%letra(ColunaDestino, X, L1),
+	letra(ColunaDestino, X, L1),
 	letterToNumber(ColunaDestino,Yf),
-	(move(LinhaToMove, Yi, J, S1, Ns1, S2, Ns2), move_piece(B, LinhaToMove, Yi, LinhaDestino, Yf, Nb, J, S1, Ns1, S2, Ns2) -> true; ask_play(B, Nb, J, S1, Ns1, S2, Ns2)).
+	(move(LinhaToMove, Yi, J, S1, Ns1, S2, Ns2), move_piece(B, LinhaToMove, Yi, LinhaDestino, Yf, Nb, J, S1, Ns1, S2, Ns2) -> true;
+		nl,
+		write('Jogada invalida! Try again...\n'),
+		nl,
+		ask_play(B, Nb, J, S1, Ns1, S2, Ns2)).
 
 
 %%%%%%%%%%%%%%%Compares the scores to chose the winner%%%%%%%%%%%%%%%
