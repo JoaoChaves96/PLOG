@@ -205,11 +205,35 @@ make_play_vs_PC(B, X, Y, S1, S2, Fs1, Fs2, J):-
 
 
 %%%%%%%%%%%%%%%Asks for plays in the Player vs Player mode%%%%%%%%%%%%%%%
+make_playPC_vs_PC(B, X, Y, S1, S2, Fs1, Fs2, J):-
+	nl,
+	write('player1 score: '),write(S1), Ns1 is S1,
+	nl,
+	write('player2 score: '),write(S2), Ns2 is S2,
+	nl,
+	nl,
+  get_char(_),
+  get_rand_piece(B, Nb, J, S1, Ns1, S2, Ns2),
+	clearScreen,
+	display_full_board(Nb, X, Y),
+	J1 is J + 1,
+	((end_game_p2(Nb, 5); end_game_p1(Nb, 1)) ->
+		clearScreen,
+		display_full_board(Nb, X, Y),
+		nl,
+		printGameOver,
+		nl,
+		nl,
+	  Fs1 is Ns1, Fs2 is Ns2;
+	  make_playPC_vs_PC(Nb, X, Y, Ns1, Ns2, Fs1, Fs2, J1)).
+
+
+%%%%%%%%%%%%%%%Asks for plays in the Player vs Player mode%%%%%%%%%%%%%%%
 make_play(B, X, Y, S1, S2, Fs1, Fs2, J):-
 	nl,
-	write(X), write(' score: '),write(S1),
+	write('Player 1: '), write(X), write('; Score: '),write(S1),
 	nl,
-	write(Y), write(' score: '),write(S2),
+	write('Player 2: '), write(Y), write('; Score: '),write(S2),
 	nl,
 	nl,
 	printPlayerTurn(J), nl, nl,
@@ -243,9 +267,20 @@ play(B, X, Y, J):-
 %%%%%%%%%%%%%%%Main predicate of the Player vs PC mode%%%%%%%%%%%%%%%
 play_vs_PC(B, X, Y):-
   board(B),
-	Y = 'Computer',
+  clearScreen,
   display_full_board(B, X, Y),
 	nl,
+  get_char(_),
 	make_play_vs_PC(B, X, Y, 0, 0, Fs1, Fs2, 1),
+	compare_scores(Fs1, Fs2, 1),
+	mainMenu.
+
+playPC_vs_PC(B, X, Y):-
+  board3(B),
+  clearScreen,
+  display_full_board(B, X, Y),
+	nl,
+  get_char(_),
+	make_playPC_vs_PC(B, X, Y, 0, 0, Fs1, Fs2, 1),
 	compare_scores(Fs1, Fs2, 1),
 	mainMenu.

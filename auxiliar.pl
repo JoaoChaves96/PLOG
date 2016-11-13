@@ -17,11 +17,11 @@ letterToNumber(Letra,Numero):-
 
 % Verifica se Input esta entre A-D
 letra(X,_,_) :- X = 'a'; X = 'b'; X = 'c'; X = 'd'.
-letra(_,_,_) :- clearScreen,write('Letra invalida! Try Again\n'), false.
+letra(_,_,_) :- write('Letra invalida! Try Again\n'), false.
 
 % Verifica se Input esta entre 1-8
 numero(X,_,_) :- integer(X), X >= 1,  X =< 8.
-numero(_,_,_) :- clearScreen, write('Valor invalido! Try Again\n'), false.
+numero(_,_,_) :- write('Valor invalido! Try Again\n'), false.
 
 %____________________________________________________________________
 getNewLine :-

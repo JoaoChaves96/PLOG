@@ -29,6 +29,15 @@ board2([
 		[p,s,d,s],
 		[s,s,s,s]]).
 
+board3([
+		[p,p,d,q],
+		[p,p,p,p],
+		[p,p,p,p],
+		[p,p,p,p],
+		[p,p,p,p],
+		[p,p,p,p],
+		[p,p,p,p],
+		[p,p,d,q]]).
 
 %%%%%%%%%%%%%Display board predicates%%%%%%%%%%%%%%%%%%%%%%%%
 display_board_letter:-

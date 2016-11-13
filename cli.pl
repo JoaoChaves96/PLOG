@@ -55,7 +55,7 @@ playMenu :-
 		(
 			In = '1' -> pvpMenu;
 			In = '2' -> play_vs_PC(B, X, Y);
-			In = '3' -> play_vs_PC(B, X, Y);
+			In = '3' -> playPC_vs_PC(B, X, Y);
 			playMenu
 		),
 		mainMenu.
@@ -75,6 +75,10 @@ printPlayMenu:-
 
 %%%%%%%%%%%%%%%Player vs Player initiation menu%%%%%%%%%%%%%%%
 pvpMenu:-
+		clearScreen,
+		read_player(X),
+		clearScreen,
+		read_player(Y),
 		clearScreen,
 		color1Menu(C1),
 		clearScreen,

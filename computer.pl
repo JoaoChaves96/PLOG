@@ -2,6 +2,7 @@
 random_play(B, L, C, Nb, J, S1, Ns1, S2, Ns2):-
   random(1,8,X),
   random(1,4,Y),
+  nl,write('From: '), write(L), write(' '), write(C), write('; To: '), write(X), write(' '), write(Y), nl,
   (
     (move(L, C, J, S1, Ns1, S2, Ns2) -> (move_piece_PC(B, L, C, X, Y, Nb, J, S1, Ns1, S2, Ns2) -> true;get_rand_piece(B, Nb, J, S1, Ns1, S2, Ns2)); get_rand_piece(B, Nb, J, S1, Ns1, S2, Ns2))
   ).
