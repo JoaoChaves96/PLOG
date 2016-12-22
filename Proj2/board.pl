@@ -21,6 +21,18 @@ board_area2([
       [a21, a21, a21, a19, a24, a24, a24, a24, a24, a23]
 ]).
 
+board_area3([
+	[a1 , a2 , a2 , a2 , a3 , a3 ],
+	[a1 , a2 , a5 , a6 , a6 , a3 ],
+	[a1 , a4 , a5 , a7 , a6 , a8 ],
+	[a4 , a4 , a12, a7 , a7 , a8 ],
+	[a13, a12, a12, a11, a9 , a8 ],
+	[a13, a11, a11, a11, a9 , a9 ],
+	[a14, a14, a14, a10, a10, a10]
+]).
+
+
+
 display_line([E|Es]):-
 	translate(E,V),
 	write(' '),
@@ -119,3 +131,35 @@ display_f_board2([L1|Ls]):-
 	display_f_board2(Ls).
 
 display_f_board2([]).
+
+
+%%%%%%%%%%%%%%%Puzzle 3 display%%%%%%%%%%%%%%%
+display_area_board3(B):-
+  nl,
+  write(' ---------------------------------- '),nl,
+  display_a_board3(B).
+
+display_full_board3(B):-
+  nl,
+  write(' --------------------------- '),nl,
+  display_f_board3(B).
+
+display_a_board3([L1|Ls]):-
+	write('|'),
+	display_line(L1),
+  nl,
+  write(' ---------------------------------- '),
+  nl,
+	display_a_board3(Ls).
+
+display_a_board3([]).
+
+display_f_board3([L1|Ls]):-
+	write('|'),
+	display_line(L1),
+  nl,
+  write(' --------------------------- '),
+  nl,
+	display_f_board3(Ls).
+
+display_f_board3([]).

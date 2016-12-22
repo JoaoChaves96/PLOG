@@ -18,7 +18,8 @@ printMainMenu:-
   nl, nl,
   write('1- See puzzle 1 (7x7)'), nl,
   write('2- See puzzle 2 (10x10)'), nl,
-  write('3- Exit'), nl,
+  write('3- See puzzle 3 (7x6)'), nl,
+  write('4- Exit'), nl,
   printBlank(20).
 
 
@@ -32,6 +33,12 @@ printPuzzle2Menu:-
   write('######################## Puzzle 2 #########################'),nl,
   write('###########################################################'),nl, nl.
 
+
+printPuzzle3Menu:-
+  write('###########################################################'),nl,
+  write('######################## Puzzle 3 #########################'),nl,
+  write('###########################################################'),nl, nl.
+  
 printPuzzle1Result:-
   write('###########################################################'),nl,
   write('######################## Puzzle 1 #########################'),nl,
@@ -41,6 +48,12 @@ printPuzzle1Result:-
 printPuzzle2Result:-
   write('###########################################################'),nl,
   write('######################## Puzzle 2 #########################'),nl,
+  write('###########################################################'),nl,
+  write('######################### Result ##########################'),nl, nl.
+  
+  printPuzzle3Result:-
+  write('###########################################################'),nl,
+  write('######################## Puzzle 3 #########################'),nl,
   write('###########################################################'),nl,
   write('######################### Result ##########################'),nl, nl.
 
@@ -75,8 +88,20 @@ showPuzzleMenu(In):-
   printBlank(20),
   get_char(_),
   solvePuzzle2Menu.
+  
+ showPuzzleMenu(In):-
+  In = '3',
+  clearScreen,
+  printPuzzle3Menu,
+  board_area1(B1),
+  display_area_board1(B1),
+  get_char(_),
+  write('Press any key to show the result of the puzzle...'),
+  printBlank(20),
+  get_char(_),
+  solvePuzzle1Menu.
 
-showPuzzleMenu(In):- In = '3'.
+showPuzzleMenu(In):- In = '4'.
 
 solvePuzzle1Menu:-
   clearScreen,
@@ -92,6 +117,16 @@ solvePuzzle2Menu:-
   clearScreen,
   printPuzzle2Result, nl,
   solve_puzzle2,
+  nl,
+  write('Press any key to go back...'),
+  printBlank(20),
+  get_char(_),
+  mainMenu.
+  
+  solvePuzzle3Menu:-
+  clearScreen,
+  printPuzzle3Result, nl,
+  solve_puzzle3,
   nl,
   write('Press any key to go back...'),
   printBlank(20),
