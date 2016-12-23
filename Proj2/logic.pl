@@ -119,9 +119,9 @@ solve2(L1, L2, L3, L4, L5, L6, L7, L8, L9, L10, Lines, Columns):-
   labeling([],L10).
 
   %%%%%%%%%%%%%%   puzzle 3 %%%%%%%%%%%%%%%%%%%%%%
-  
-  
-  
+
+
+
   solve3(L1, L2, L3, L4, L5, L6, L7, Lines, Columns):-
   L1 = [S1 , S2 , S2 , S2 , S3 , S3 ],
   L2 = [S1 , S2 , S5 , S6 , S6 , S3 ],
@@ -130,15 +130,15 @@ solve2(L1, L2, L3, L4, L5, L6, L7, L8, L9, L10, Lines, Columns):-
   L5 = [S13, S12, S12, S11, S9 , S8 ],
   L6 = [S13, S11, S11, S11, S9 , S9	],
   L7 = [S14, S14, S14, S10, S10, S10],
-  
-  C1=[S1 + S1 + S1 + S4 + S13 + S13 + S14],
-  C2=[S2 + S2 + S4 + S4 + S12 + S11 + S14 ],
-  C3=[S2 + S5 + S5 + S12 + S12 + S11 + S14 ],
-  C4=[ S2 + S6 + S7 + S7 + S11 + S11 + S10],
-  C5=[ S3 + S6 + S6 + S7 + S9 + S9 + S10 ],
-  C6=[S3 + S3+ S8 + S8 + S8 + S9 + S10]  ,
-  
-  
+
+  C1=[S1, S1, S1, S4, S13, S13, S14],
+  C2=[S2, S2, S4, S4, S12, S11, S14 ],
+  C3=[S2, S5, S5, S12, S12, S11, S14 ],
+  C4=[ S2, S6, S7, S7, S11, S11, S10],
+  C5=[ S3, S6, S6, S7, S9, S9, S10 ],
+  C6=[S3, S3, S8, S8, S8, S9, S10]  ,
+
+
   domain(L1, 0, 1),
   domain(L2, 0, 1),
   domain(L3, 0, 1),
@@ -146,8 +146,8 @@ solve2(L1, L2, L3, L4, L5, L6, L7, L8, L9, L10, Lines, Columns):-
   domain(L5, 0, 1),
   domain(L6, 0, 1),
   domain(L7, 0, 1),
-  
-  
+
+
    %%%%%%%%%%Contagem das linhas%%%%%%%%%%
 
   check_lines_columns([L1, L2, L3, L4, L5, L6, L7], Lines, 1),
@@ -155,29 +155,19 @@ solve2(L1, L2, L3, L4, L5, L6, L7, L8, L9, L10, Lines, Columns):-
   %%%%%%%%%%Contagem das colunas%%%%%%%%%%
 
   check_lines_columns([C1, C2, C3, C4, C5, C6], Columns, 1),
-  
-   labeling([],L1),
+
+  labeling([],L1),
   labeling([],L2),
   labeling([],L3),
   labeling([],L4),
   labeling([],L5),
   labeling([],L6),
   labeling([],L7).
-  
+
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+
+
+
 
 solve_puzzle1:-
   clue_line1(L),
@@ -207,11 +197,11 @@ solve_puzzle2:-
   append(Nb8, [L9], Nb9),
   append(Nb9, [L10], Nb10),
   display_full_board2(Nb10).
-  
-  solve_puzzle3:-
+
+solve_puzzle3:-
   clue_line3(L),
   clue_column3(C),
-  solve1(L1, L2, L3, L4, L5, L6, L7, L, C),
+  solve3(L1, L2, L3, L4, L5, L6, L7, L, C),
   append([], [L1], Nb),
   append(Nb, [L2], Nb2),
   append(Nb2, [L3], Nb3),

@@ -136,19 +136,19 @@ display_f_board2([]).
 %%%%%%%%%%%%%%%Puzzle 3 display%%%%%%%%%%%%%%%
 display_area_board3(B):-
   nl,
-  write(' ---------------------------------- '),nl,
+  write(' ----------------------------- '),nl,
   display_a_board3(B).
 
 display_full_board3(B):-
   nl,
-  write(' --------------------------- '),nl,
+  write(' ----------------------- '),nl,
   display_f_board3(B).
 
 display_a_board3([L1|Ls]):-
 	write('|'),
 	display_line(L1),
   nl,
-  write(' ---------------------------------- '),
+  write(' ----------------------------- '),
   nl,
 	display_a_board3(Ls).
 
@@ -158,7 +158,7 @@ display_f_board3([L1|Ls]):-
 	write('|'),
 	display_line(L1),
   nl,
-  write(' --------------------------- '),
+  write(' ----------------------- '),
   nl,
 	display_f_board3(Ls).
 

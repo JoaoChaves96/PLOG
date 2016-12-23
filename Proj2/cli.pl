@@ -38,7 +38,7 @@ printPuzzle3Menu:-
   write('###########################################################'),nl,
   write('######################## Puzzle 3 #########################'),nl,
   write('###########################################################'),nl, nl.
-  
+
 printPuzzle1Result:-
   write('###########################################################'),nl,
   write('######################## Puzzle 1 #########################'),nl,
@@ -50,8 +50,8 @@ printPuzzle2Result:-
   write('######################## Puzzle 2 #########################'),nl,
   write('###########################################################'),nl,
   write('######################### Result ##########################'),nl, nl.
-  
-  printPuzzle3Result:-
+
+printPuzzle3Result:-
   write('###########################################################'),nl,
   write('######################## Puzzle 3 #########################'),nl,
   write('###########################################################'),nl,
@@ -88,18 +88,18 @@ showPuzzleMenu(In):-
   printBlank(20),
   get_char(_),
   solvePuzzle2Menu.
-  
+
  showPuzzleMenu(In):-
   In = '3',
   clearScreen,
   printPuzzle3Menu,
-  board_area1(B1),
-  display_area_board1(B1),
+  board_area3(B1),
+  display_area_board3(B1),
   get_char(_),
   write('Press any key to show the result of the puzzle...'),
   printBlank(20),
   get_char(_),
-  solvePuzzle1Menu.
+  solvePuzzle3Menu.
 
 showPuzzleMenu(In):- In = '4'.
 
@@ -122,8 +122,8 @@ solvePuzzle2Menu:-
   printBlank(20),
   get_char(_),
   mainMenu.
-  
-  solvePuzzle3Menu:-
+
+solvePuzzle3Menu:-
   clearScreen,
   printPuzzle3Result, nl,
   solve_puzzle3,
